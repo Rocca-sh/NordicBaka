@@ -1,0 +1,101 @@
+{
+    "workbench.colorTheme": "Nord",
+    "window.menuBarVisibility": "toggle",
+    "workbench.layoutControl.enabled": false,
+    "workbench.activityBar.location": "top",
+    "editor.minimap.enabled": false,
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.navigationControl.enabled": false,
+    "chat.agentsControl.enabled": false,
+    "github.copilot.nextEditSuggestions.enabled": false,
+
+    "workbench.colorCustomizations": {
+        "[Nord]": {
+            "editor.background": "#2e3440",
+            "sideBar.background": "#2e3440",
+            "activityBar.background": "#2e3440",
+            "editor.foreground": "#bec8d1",
+            "editorLineNumber.foreground": "#4c566a",
+            "editorLineNumber.activeForeground": "#86cecb",
+            "editor.selectionBackground": "#bec8d1",
+            "editor.selectionForeground": "#2e3440",
+            "editorCursor.foreground": "#bec8d1",
+            "statusBar.background": "#3b4252",
+            "statusBar.foreground": "#bec8d1",
+            "activityBar.foreground": "#86cecb",
+            "titleBar.activeBackground": "#2e3440",
+            "titleBar.activeForeground": "#bec8d1",
+
+            // --- Errores y Alertas (Teto Rojo) ---
+            "editorError.foreground": "#d46a83",
+            "editorWarning.foreground": "#ffd543",
+            "list.errorForeground": "#d46a83",
+            "list.warningForeground": "#ffd543",
+            "breadcrumb.errorForeground": "#d46a83",
+            "minimap.errorHighlight": "#d46a83"
+        }
+    },
+
+    "editor.tokenColorCustomizations": {
+        "[Nord]": {
+            "textMateRules": [
+                {
+                    "scope": ["variable", "variable.parameter", "variable.other.readwrite"],
+                    "settings": { "foreground": "#bec8d1" }
+                },
+                {
+                    "scope": ["entity.name.function", "support.function"],
+                    "settings": { "foreground": "#86cecb", "fontStyle": "bold" }
+                },
+                {
+                    "scope": ["keyword", "storage.type", "storage.modifier"],
+                    "settings": { "foreground": "#81a1c1" }
+                },
+                {
+                    "scope": ["entity.name.type", "support.class", "entity.other.inherited-class"],
+                    "settings": { "foreground": "#52c7ad" }
+                },
+                {
+                    "scope": [
+                        "string", 
+                        "punctuation.definition.string",
+                        "constant.numeric", 
+                        "constant.language.boolean",
+                        "constant.language"
+                    ],
+                    "settings": { "foreground": "#d46a83" }
+                },
+                {
+                    "scope": [
+                        "keyword.operator",
+                        "punctuation.terminator",
+                        "punctuation.separator",
+                        "punctuation.accessor",
+                        "keyword.control.as",
+                        "keyword.other.unit",
+                        "punctuation.section.embedded",
+                        "meta.annotation punctuation.definition.annotation",
+                        "storage.type.annotation"
+                    ],
+                    "settings": { "foreground": "#ffd543" }
+                },
+                {
+                    "scope": ["comment"],
+                    "settings": { "foreground": "#4c566a", "fontStyle": "italic" }
+                },
+                {
+                    "scope": ["entity.name.tag", "punctuation.definition.tag"],
+                    "settings": { "foreground": "#d46a83" }
+                },
+                {
+                    "scope": ["meta.preprocessor", "keyword.control.directive"],
+                    "settings": { "foreground": "#ffd543" }
+                },
+                {
+                    "scope": ["invalid", "invalid.illegal"],
+                    "settings": { "foreground": "#d46a83", "fontStyle": "bold underline" }
+                }
+            ]
+        }
+    }
+}
