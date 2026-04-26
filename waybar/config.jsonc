@@ -1,0 +1,34 @@
+{
+  "layer": "top",
+  "position": "bottom",
+  "height": 40,
+  "margin-bottom": 5,
+  "margin-left": 24,
+  "margin-right": 24,
+  "spacing": 0,
+  "modules-left": ["custom/rofi", "hyprland/workspaces"],
+  "modules-center": [],
+  "modules-right": ["tray", "custom/terminal", "battery", "network", "pulseaudio", "clock"],
+  "custom/rofi": { "format": "", "on-click": "wofi --show drun", "tooltip": false },
+  "custom/terminal": { "format": "", "on-click": "kitty", "tooltip": false },
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "persistent-workspaces": { "*": 5 },
+    "format-icons": { "default": "", "active": "" }
+  },
+  "tray": { "icon-size": 18, "spacing": 10 },
+  "battery": {
+    "format": "{icon} {capacity}%",
+    "format-charging": "󱐋 {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"]
+  },
+  "network": { "format-wifi": "", "format-ethernet": "󰈀", "format-disconnected": "󰖪", "on-click" : "nm-connection-editor" },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟",
+    "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+    "on-click": "pavucontrol"
+  },
+  "clock": { "format": "{:%H:%M}" }
+}

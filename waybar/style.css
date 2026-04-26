@@ -1,0 +1,74 @@
+@import "colors.css";
+
+window#waybar {
+    background-color: @nord-bg;
+    border: none;
+    border-radius: 12px;
+    color: @nord-fg;
+    font-family: "JetBrainsMono Nerd Font";
+}
+
+#custom-rofi, #custom-terminal, #workspaces, #tray, #battery, #network, #pulseaudio, #clock {
+    padding: 0 12px;
+    background-color: transparent;
+}
+
+#custom-rofi {
+    font-size: 18px;
+    color: @miku-main;
+    padding-left: 20px;
+}
+
+#custom-terminal {
+    font-size: 18px;
+    color: @miku-main;
+}
+
+/* --- Workspaces: La lógica de las Bakas --- */
+
+#workspaces button {
+    padding: 0 8px;
+    color: @neru-main; /* Gris Nord para los inactivos */
+}
+
+#workspaces button.focused, #workspaces button.active {
+    color: #d46a83; /* Teto Rojo para el escritorio actual */
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    color: #ffd543; /* Neru Amarillo para alertas/warning */
+    animation: blink 0.5s linear infinite alternate;
+}
+
+#battery {
+    color: #ffd543;
+}
+
+#network {
+    color: @neru-main;
+}
+
+ #pulseaudio{
+ 	  color: @teto-main;
+ }
+
+#clock {
+    font-weight: bold;
+    color: #bec8d1;
+    padding-right: 20px;
+}
+
+tooltip {
+    background-color: #2e3440;
+    border: 1px solid #86cecb;
+    border-radius: 8px;
+}
+
+@keyframes blink {
+    to {
+        background-color: rgba(255, 213, 67, 0.2);
+        color: #2e3440;
+    }
+}
+

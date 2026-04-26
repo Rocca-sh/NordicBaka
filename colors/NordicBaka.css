@@ -1,0 +1,18 @@
+/* ~/.config/colors/NordicBaka.css */
+:root {
+    /* Polar Night - Base Nord */
+    --nord0: #2e3440;
+    --nord1: #3b4252;
+    --nord3: #4c566a;
+
+    /* Snow Storm - Texto */
+    --nord4: #d8dee9;
+    --nord6: #eceff4;
+
+    /* Triple Baka Team - Acentos */
+    --miku-main: #86cecb;
+    --miku-alt: #52c7ad;
+    --teto-main: #d46a83;
+    --teto-alt: #854462;
+    --neru-main: #ffd543;
+}

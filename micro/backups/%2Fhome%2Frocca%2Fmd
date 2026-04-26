@@ -1,0 +1,304 @@
+# FondoSeguro
+### Plataforma de Ahorro Inteligente para Trabajadores Informales
+> Hackathon — Fase 1: Definición del Problema
+
+## 1. Solución Propuesta
+
+### ¿Qué es FondoSeguro?
+
+FondoSeguro es una plataforma financiera nativa en la nube (web + móvil) que ayuda a trabajadores informales y personas de bajos ingresos a construir un fondo de emergencia de forma automática e inteligente.
+
+El sistema analiza los patrones de gasto del usuario y, en los momentos en que gasta menos de lo habitual, sugiere transferir una cantidad pequeña a su fondo de emergencia.
+De esta forma, el ahorro ocurre de manera natural, sin fricción y sin que el usuario tenga que tomar decisiones difíciles.
+
+### ¿Qué problema resuelve?
+
+Más del 60% de los trabajadores en Latinoamérica pertenecen al sector informal. Este segmento no tiene acceso a herramientas financieras adaptadas a su realidad: ingresos variables, sin historial crediticio y sin cultura de ahorro estructurado. 
+Cuando ocurre una emergencia (enfermedad, desempleo, accidente), la única opción disponible suele ser endeudarse.
+El problema no es falta de voluntad para ahorrar, sino la ausencia de una herramienta que se adapte a ingresos irregulares y guíe al usuario paso a paso.
+
+### ¿Cómo funciona?
+
+1. El usuario se registra y conecta su información financiera (cuenta bancaria, estado de cuenta en PDF o ingreso manual de gastos).
+2. El sistema analiza sus patrones de gasto con un modelo de IA.
+3. La IA genera un **score financiero (0–100)** y clasifica el riesgo del usuario (alto / medio / bajo).
+4. Con base en el score, el sistema sugiere reglas de ahorro personalizadas ("esta semana gastaste $200 menos que tu promedio — ¿guardamos $50?").
+5. El usuario visualiza su progreso hacia su meta de emergencia en un dashboard claro.
+
+### Alineación con los ODS
+
+| ODS | Relación |
+|-----|----------|
+| **ODS 1** — Fin de la pobreza | Reduce la vulnerabilidad financiera de personas en situación de informalidad |
+| **ODS 8** — Trabajo decente y crecimiento económico | Promueve la resiliencia económica de trabajadores informales |
+| **ODS 10** — Reducción de las desigualdades | Democratiza el acceso a herramientas financieras para poblaciones excluidas |
+
+
+## 2. Arquitectura y Stack Tecnológico
+
+### Visión general
+
+FondoSeguro es una solución **nativa en la nube** desplegada en **AWS**, construida con una arquitectura de **contenedores serverless (ECS Fargate)** para el backend principal y **AWS Lambda** para el servicio de inteligencia artificial.
+
+### Capas de la solución
+
+| Capa | Servicio / Tecnología |
+|------|-----------------------|
+| **Seguridad** | Amazon Cognito (auth + JWT), IAM (roles y permisos), HTTPS en API Gateway, KMS (encriptación en reposo) |
+| **Aplicación** | Spring Boot en ECS Fargate (backend), Python + scikit-learn en AWS Lambda (IA) |
+| **Almacenamiento** | Amazon DynamoDB (datos de usuarios y transacciones), Amazon S3 (estados de cuenta en PDF) |
+| **Monitoreo** | Amazon CloudWatch (logs, métricas y alertas) |
+| **Despliegue** | Amazon ECR (registro de imágenes Docker), GitHub Actions (CI/CD), AWS ECS Fargate |
+| **Procesamiento de documentos** | Amazon Textract (extracción de datos de PDFs) |
+
+### Stack por equipo
+
+| Área | Tecnología |
+|------|------------|
+| **Frontend** | Next.js (web), Expo / React Native (móvil), AWS Amplify (hosting) |
+| **Backend** | Java 17 + Spring Boot 3, desplegado en ECS Fargate |
+| **IA** | Python 3.11, scikit-learn, desplegado en AWS Lambda |
+| **Cloud / DevOps** | Docker, Amazon ECR, ECS Fargate, API Gateway, GitHub Actions |
+
+---
+
+## 3. Diagramas UML
+
+### 3.1 Diagrama de Componentes
+
+```mermaid
+graph TB
+    subgraph Cliente["🖥️ Cliente"]
+        WEB["Next.js Web App"]
+        MOB["Expo Mobile App"]
+    end
+
+    subgraph AWS_Edge["☁️ AWS — Capa de Entrada"]
+        AMPLIFY["AWS Amplify\n(Hosting frontend)"]
+        COGNITO["Amazon Cognito\n(Autenticación + JWT)"]
+        APIGW["API Gateway\n(Entrada única)"]
+    end
+
+    subgraph AWS_App["☁️ AWS — Capa de Aplicación"]
+        ECS_U["ECS Fargate\nSpring Boot\n/usuarios"]
+        ECS_G["ECS Fargate\nSpring Boot\n/gastos"]
+        LAMBDA["AWS Lambda\nPython + scikit-learn\n/score"]
+    end
+
+    subgraph AWS_Data["☁️ AWS — Capa de Datos"]
+        DYNAMO["Amazon DynamoDB\n(usuarios + transacciones)"]
+        S3["Amazon S3\n(PDFs estados de cuenta)"]
+        TEXTRACT["Amazon Textract\n(extracción de PDFs)"]
+    end
+
+    subgraph AWS_Ops["☁️ AWS — Operaciones"]
+        ECR["Amazon ECR\n(imágenes Docker)"]
+        CW["Amazon CloudWatch\n(logs + métricas)"]
+        GHA["GitHub Actions\n(CI/CD)"]
+    end
+
+    WEB --> AMPLIFY
+    MOB --> APIGW
+    AMPLIFY --> COGNITO
+    COGNITO --> APIGW
+    APIGW --> ECS_U
+    APIGW --> ECS_G
+    APIGW --> LAMBDA
+    ECS_U --> DYNAMO
+    ECS_G --> DYNAMO
+    ECS_G --> S3
+    S3 --> TEXTRACT
+    TEXTRACT --> ECS_G
+    ECS_G --> LAMBDA
+    GHA --> ECR
+    ECR --> ECS_U
+    ECR --> ECS_G
+    ECS_U --> CW
+    ECS_G --> CW
+    LAMBDA --> CW
+```
+
+---
+
+### 3.2 Diagrama de Secuencia — Flujo principal (análisis de gastos + score IA)
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant Frontend
+    participant Cognito
+    participant APIGateway as API Gateway
+    participant BackendGastos as Spring Boot /gastos
+    participant S3
+    participant Textract
+    participant LambdaIA as Lambda /score
+    participant DynamoDB
+
+    Usuario->>Frontend: Inicia sesión
+    Frontend->>Cognito: Solicita autenticación
+    Cognito-->>Frontend: JWT token
+
+    Usuario->>Frontend: Sube estado de cuenta (PDF) o ingresa gastos
+    Frontend->>APIGateway: POST /gastos (con JWT)
+    APIGateway->>BackendGastos: Enruta request (JWT validado)
+
+    alt PDF subido
+        BackendGastos->>S3: Guarda PDF
+        BackendGastos->>Textract: Solicita extracción de datos
+        Textract-->>BackendGastos: Datos estructurados del PDF
+    end
+
+    BackendGastos->>DynamoDB: Guarda transacciones del usuario
+    BackendGastos->>LambdaIA: Envía datos financieros (salario, deudas, historial)
+    LambdaIA-->>BackendGastos: Score (0-100) + nivel de riesgo
+    BackendGastos->>DynamoDB: Guarda score del usuario
+    BackendGastos-->>APIGateway: Respuesta con score + recomendaciones
+    APIGateway-->>Frontend: Respuesta final
+    Frontend-->>Usuario: Muestra dashboard con score y sugerencias de ahorro
+```
+
+---
+
+### 3.3 Diagrama de Despliegue
+
+```mermaid
+graph TB
+    subgraph Internet["🌐 Internet"]
+        USER_WEB["Usuario Web\n(Navegador)"]
+        USER_MOB["Usuario Móvil\n(iOS / Android)"]
+    end
+
+    subgraph AWS_Cloud["☁️ AWS Cloud — Region us-east-1"]
+
+        subgraph Frontend_Layer["Capa Frontend"]
+            AMPLIFY["AWS Amplify\nNext.js build estático"]
+        end
+
+        subgraph Auth_Layer["Capa de Autenticación"]
+            COGNITO["Amazon Cognito\nUser Pool"]
+        end
+
+        subgraph Gateway_Layer["Capa de Entrada"]
+            APIGW["API Gateway\nREST API + HTTPS"]
+        end
+
+        subgraph App_Layer["Capa de Aplicación — ECS Fargate"]
+            subgraph ECS_Cluster["ECS Cluster"]
+                TASK_U["Task: usuarios-service\nSpring Boot : 8080\nDocker image"]
+                TASK_G["Task: gastos-service\nSpring Boot : 8081\nDocker image"]
+            end
+            LAMBDA_IA["Lambda Function\nscore-ia\nPython 3.11\n512 MB RAM"]
+        end
+
+        subgraph Data_Layer["Capa de Datos"]
+            DYNAMO["DynamoDB\nTablas: usuarios, transacciones, scores"]
+            S3_BUCKET["S3 Bucket\nfondoseguro-documentos"]
+        end
+
+        subgraph AI_Layer["Capa de Procesamiento"]
+            TEXTRACT["Amazon Textract"]
+        end
+
+        subgraph Ops_Layer["Capa de Operaciones"]
+            ECR["ECR Repository\nimágenes Docker"]
+            CW["CloudWatch\nLogs + Dashboards"]
+        end
+
+    end
+
+    subgraph CICD["🔧 CI/CD"]
+        GITHUB["GitHub Actions\nbuild → push ECR → deploy ECS"]
+    end
+
+    USER_WEB --> AMPLIFY
+    USER_MOB --> APIGW
+    AMPLIFY --> COGNITO
+    COGNITO --> APIGW
+    APIGW --> TASK_U
+    APIGW --> TASK_G
+    APIGW --> LAMBDA_IA
+    TASK_U --> DYNAMO
+    TASK_G --> DYNAMO
+    TASK_G --> S3_BUCKET
+    S3_BUCKET --> TEXTRACT
+    TEXTRACT --> TASK_G
+    TASK_G --> LAMBDA_IA
+    GITHUB --> ECR
+    ECR --> TASK_U
+    ECR --> TASK_G
+    TASK_U --> CW
+    TASK_G --> CW
+    LAMBDA_IA --> CW
+```
+
+---
+
+## 4. Plan de Implementación
+
+### Estrategia General
+
+La implementación se divide en 3 semanas, priorizando tener un flujo funcional de extremo a extremo lo antes posible antes de agregar funcionalidades adicionales.
+
+---
+
+### Semana 1 — Base funcional
+
+| Área | Tareas |
+|------|--------|
+| **Cloud / DevOps** | Configurar cuentas AWS, crear repositorio, definir estructura de carpetas, configurar Cognito, crear pipeline básico de GitHub Actions |
+| **Backend** | Scaffolding de proyecto Spring Boot, endpoints `/usuarios` (registro, login), conexión a DynamoDB |
+| **IA** | Definir features del modelo, recolectar o generar dataset de entrenamiento, entrenar modelo de regresión logística |
+| **Frontend** | Scaffolding Next.js + Expo, pantallas de login y registro, integración con Cognito |
+
+**Hito al final de Semana 1:** Un usuario puede registrarse, iniciar sesión y la infraestructura base está desplegada en AWS.
+
+---
+
+### Semana 2 — Core de la aplicación
+
+| Área | Tareas |
+|------|--------|
+| **Cloud / DevOps** | Configurar ECS Fargate, desplegar servicios Spring Boot desde ECR, configurar API Gateway con rutas y autenticación |
+| **Backend** | Endpoints `/gastos` (CRUD), integración con S3 + Textract para PDFs, llamada a Lambda de IA |
+| **IA** | Exponer modelo como Lambda Python, integrar con backend, ajustar modelo con feedback |
+| **Frontend** | Formulario de captura de gastos, subida de PDF, primera versión del dashboard con score |
+
+**Hito al final de Semana 2:** Flujo completo funcional — el usuario ingresa sus datos y recibe su score de IA.
+
+---
+
+### Semana 3 — Pulido y demo
+
+| Área | Tareas |
+|------|--------|
+| **Cloud / DevOps** | Configurar CloudWatch dashboards, alertas, ajustar permisos IAM, documentar infraestructura |
+| **Backend** | Manejo de errores, validaciones, logging estructurado |
+| **IA** | Mejorar recomendaciones de ahorro, ajuste fino del modelo |
+| **Frontend** | Mejoras de UX, sugerencias de ahorro en dashboard, app móvil funcional, preparar demo |
+
+**Hito al final de Semana 3:** Prototipo completamente funcional, desplegado en AWS, listo para demo ante jueces.
+
+---
+
+### Estrategia de Branching (Git)
+
+```
+main                  ← producción (protegida, solo merge via PR)
+└── develop           ← integración continua
+    ├── feature/backend-usuarios
+    ├── feature/backend-gastos
+    ├── feature/ia-modelo-score
+    ├── feature/frontend-auth
+    ├── feature/frontend-dashboard
+    └── feature/devops-pipeline
+```
+
+**Reglas:**
+- Nunca se hace push directo a `main` ni a `develop`
+- Cada feature se integra a `develop` mediante Pull Request con al menos 1 aprobación
+- El merge de `develop` a `main` se hace al final de cada semana como release del sprint
+- Los commits siguen el formato: `tipo(alcance): descripción` (ej. `feat(backend): agregar endpoint /gastos`)
+
+---
+
+*Equipo FondoSeguro — Hackathon 2025*

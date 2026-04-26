@@ -1,0 +1,7 @@
+{
+    "colorscheme": "NordicBaka",
+    "lsp.autocomplete": true,
+    "lsp.diagnostics": true,
+    "lsp.messages": true,
+    "lsp.server": "java=jdtls,csharp=omnisharp"
+}

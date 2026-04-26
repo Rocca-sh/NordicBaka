@@ -1,0 +1,35 @@
+# Nordic Baka Theme 
+color-link default "#bec8d1,#2e3440"
+color-link comment "#4c566a"
+
+# Miku (Cian) - Funciones y Métodos
+color-link identifier "#86cecb"
+color-link identifier.class "#52c7ad"
+color-link identifier.var "#bec8d1"
+
+# Teto (Rojo) 
+color-link constant "#d46a83"
+color-link constant.string "#d46a83"
+color-link constant.number "#d46a83"
+color-link constant.bool "#d46a83"
+
+# Neru (Amarillo) - Lógica y Operadores
+color-link symbol "#ffd543"
+color-link preproc "#ffd543"
+color-link special "#ffd543"
+
+# Nord (Azul Frost) - Estructura
+color-link statement "#81a1c1"
+color-link type "#52c7ad"
+
+# Interfaz
+color-link statusline "#bec8d1,#3b4252"
+color-link tabbar "#bec8d1,#3b4252"
+color-link line-number "#4c566a"
+color-link current-line-number "#86cecb"
+color-link cursor-line "#3b4252"
+color-link selection "#2e3440,#bec8d1"
+
+# Errores (Teto Rojo)
+color-link error "bold #d46a83"
+color-link todo "bold #ffd543"

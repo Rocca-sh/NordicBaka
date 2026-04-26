@@ -1,0 +1,18 @@
+/* --- NORD BASE (The Foundation) --- */
+@define-color nord-bg      #2e3440; /* Fondo principal (Polar Night) */
+@define-color nord-bg-alt  #3b4252; /* Fondo secundario, botones inactivos */
+@define-color nord-fg      #bec8d1; /* Texto principal (Gris Miku suave) */
+@define-color nord-gray    #4c566a; /* Comentarios y elementos deshabilitados */
+
+/* --- MIKU (Cyan & Teal - Connectivity & Tools) --- */
+@define-color miku-main    #86cecb; /* Iconos de sistema, Rofi, Terminal */
+@define-color miku-alt     #52c7ad; /* Red, WiFi, Volumen (Estado OK) */
+@define-color miku-light   #bec8d1; /* Texto de reloj y labels secundarios */
+
+/* --- TETO (Red - Focus & Identity) --- */
+@define-color teto-main    #d46a83; /*  (Focused), Errores */
+@define-color teto-dark    #854462; /* Bordes inactivos, Pestañas de fondo */
+
+/* --- NERU (Yellow - Warning & Power) --- */
+@define-color neru-main    #ffd543; /* BATERÍA, Escritorio URGENTE (Warning) */
+@define-color neru-alert   #ffd543; /* Notificaciones críticas */

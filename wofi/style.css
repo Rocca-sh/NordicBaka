@@ -1,0 +1,53 @@
+/* --- Wofi Nordic Baka: Balanced Edition --- */
+
+* {
+    border-radius: 15px;
+    border: none;
+    font-family: 'JetBrainsMono Nerd Font';
+}
+
+window {
+    font-size: 20px;
+    background-color: #2e3440; 
+}
+
+#outer-box {
+    margin: 15px;
+    background-color: #2e3440;
+}
+
+#input {
+    background-color: #3b4252; 
+    color: #d46a83;            /* Texto de búsqueda en Rojo Teto */
+    padding: 0.25em;
+    margin: 10px 15px 5px 15px;
+    border: 2px solid #d46a83;
+}
+
+#inner-box {
+    margin: 5px;
+    background-color: #2e3440;
+}
+
+#entry {
+    padding: 0.25em;
+    color: #bec8d1;
+}
+
+#text {
+    color: #bec8d1;
+}
+
+#entry:selected {
+    background-color: #86cecb; /* Fondo Azul Miku Main */
+}
+
+#text:selected {
+    color: #ffd543;            /* Texto en Amarillo Neru */
+    font-weight: bold;
+}
+
+image {
+    margin-left: .25em;
+    margin-right: .25em;
+}
